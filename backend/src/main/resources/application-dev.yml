@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pennywise
+    username: srayan
+    password: reddead
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+    properties:
+      hibernate:
+        format_sql: true
+
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+  jwt:
+    secret: U4i92rkkyHVdCLQxTlcJtlWNwMdimTs41nbrMvMqnIY
+    access-token-expiration: 900000
+    refresh-token-expiration: 2592000000
