@@ -87,4 +87,12 @@ public class JwtService {
         return extractUsername(token).equals(user.getEmail())
                 && !isTokenExpired(token);
     }
+
+    public long getAccessTokenExpiration() {
+        return jwtProperties.accessTokenExpiration();
+    }
+
+    public long getRefreshTokenExpiration() {
+        return jwtProperties.refreshTokenExpiration();
+    }
 }

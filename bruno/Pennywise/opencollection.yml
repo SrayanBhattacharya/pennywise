@@ -1,0 +1,30 @@
+opencollection: 1.0.0
+
+info:
+  name: Pennywise
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  variables:
+    - name: baseUrl
+      value: http://localhost:8080/api
+    - name: accessToken
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI5MjgxMmJkZC04OWVmLTQ3NjktYWFmMy0yMjliNDdmNzFiNGQiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc4NDkwNTczNywiZXhwIjoxNzg0OTA2NjM3fQ._2NK9XhvS9bX8A5qvsjap0oOfIP3Jks-zN7ZPs-9HBw
+    - name: refreshToken
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI5MjgxMmJkZC04OWVmLTQ3NjktYWFmMy0yMjliNDdmNzFiNGQiLCJyb2xlIjoiVVNFUiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzg0OTA1NzM3LCJleHAiOjE3ODc0OTc3Mzd9.vVfckqxo3Q1dYJCLi_qubyceZ5QsF_lcTyIisLGNdGQ
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
