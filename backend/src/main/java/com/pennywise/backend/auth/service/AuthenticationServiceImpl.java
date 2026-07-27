@@ -10,6 +10,8 @@ import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.auth.repository.RefreshTokenRepository;
 import com.pennywise.backend.auth.repository.UserRepository;
 import com.pennywise.backend.auth.security.CustomUserDetails;
+import com.pennywise.backend.common.exception.EmailAlreadyExistsException;
+import com.pennywise.backend.common.exception.InvalidRefreshTokenException;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists: " + request.email());
         }
 
         User user = User.builder()
@@ -79,14 +81,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (storedToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(storedToken);
-            throw new IllegalArgumentException("Refresh token has expired.");
+            throw new InvalidRefreshTokenException("Refresh token has expired.");
         }
 
         User user = storedToken.getUser();
 
         if (!jwtService.isTokenValid(request.refreshToken(), user)) {
             refreshTokenRepository.delete(storedToken);
-            throw new IllegalArgumentException("Invalid refresh token.");
+            throw new InvalidRefreshTokenException("Invalid refresh token.");
         }
 
         // Rotate refresh token
