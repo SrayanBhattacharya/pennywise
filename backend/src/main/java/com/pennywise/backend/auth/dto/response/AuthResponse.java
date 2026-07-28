@@ -1,4 +1,4 @@
-package com.pennywise.backend.auth.dto;
+package com.pennywise.backend.auth.dto.response;
 
 public record AuthResponse(
         String accessToken,

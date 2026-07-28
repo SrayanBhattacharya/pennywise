@@ -1,5 +1,6 @@
 package com.pennywise.backend.auth.entity;
 
+import com.pennywise.backend.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,12 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
+public class User extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String firstName;
 
@@ -45,12 +41,4 @@ public class User {
     @Column(nullable = false)
     @Builder.Default
     private Boolean enabled = true;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private Instant updatedAt;
 }

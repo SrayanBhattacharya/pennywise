@@ -1,9 +1,9 @@
 package com.pennywise.backend.auth.controller;
 
-import com.pennywise.backend.auth.dto.AuthResponse;
-import com.pennywise.backend.auth.dto.LoginRequest;
-import com.pennywise.backend.auth.dto.RefreshTokenRequest;
-import com.pennywise.backend.auth.dto.RegisterRequest;
+import com.pennywise.backend.auth.dto.response.AuthResponse;
+import com.pennywise.backend.auth.dto.request.LoginRequest;
+import com.pennywise.backend.auth.dto.request.RefreshTokenRequest;
+import com.pennywise.backend.auth.dto.request.RegisterRequest;
 import com.pennywise.backend.auth.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
