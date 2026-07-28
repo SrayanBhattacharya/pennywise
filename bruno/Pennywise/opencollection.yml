@@ -19,9 +19,9 @@ request:
     - name: baseUrl
       value: http://localhost:8080/api
     - name: accessToken
-      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI5MjgxMmJkZC04OWVmLTQ3NjktYWFmMy0yMjliNDdmNzFiNGQiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc4NDkwNTczNywiZXhwIjoxNzg0OTA2NjM3fQ._2NK9XhvS9bX8A5qvsjap0oOfIP3Jks-zN7ZPs-9HBw
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI0MzRhMjI5My03NDA2LTQxMGUtOGQ5Ny05YjRhY2ZjYmRhODciLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc4NTI2MTEyOSwiZXhwIjoxNzg1MjYyMDI5fQ.1A1lppd5tZfoH9IltxlguoO5aaDE3wehG0FQY8Iw2co
     - name: refreshToken
-      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI5MjgxMmJkZC04OWVmLTQ3NjktYWFmMy0yMjliNDdmNzFiNGQiLCJyb2xlIjoiVVNFUiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzg0OTA1NzM3LCJleHAiOjE3ODc0OTc3Mzd9.vVfckqxo3Q1dYJCLi_qubyceZ5QsF_lcTyIisLGNdGQ
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI0MzRhMjI5My03NDA2LTQxMGUtOGQ5Ny05YjRhY2ZjYmRhODciLCJyb2xlIjoiVVNFUiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzg1MjYxMTI5LCJleHAiOjE3ODc4NTMxMjl9.2LbdTs-m0r88D-g_Hy010mLyGi_YG_XaaC-onC1WPaI
 bundled: false
 extensions:
   bruno:

@@ -17,7 +17,5 @@ public record TransactionResponse(
         boolean recurring,
         UUID categoryId,
         String categoryName,
-        TransactionType categoryType,
-        Instant createdAt,
-        Instant updatedAt
+        TransactionType categoryType
 ) {}

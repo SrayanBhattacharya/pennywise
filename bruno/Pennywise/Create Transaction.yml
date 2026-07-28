@@ -1,0 +1,30 @@
+info:
+  name: Create Transaction
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/transactions"
+  headers:
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "categoryId": "ab702d13-c5f0-4b61-93ea-381f5aff5944",
+        "amount": 499.99,
+        "title": "Mechanical Keyboard",
+        "merchantName": "Amazon",
+        "transactionDate": "2026-07-28",
+        "notes": "RK M75",
+        "recurring": false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

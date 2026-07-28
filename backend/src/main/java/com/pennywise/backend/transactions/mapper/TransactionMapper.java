@@ -20,9 +20,7 @@ public class TransactionMapper {
                 transaction.isRecurring(),
                 transaction.getCategory().getId(),
                 transaction.getCategory().getName(),
-                transaction.getCategory().getType(),
-                transaction.getCreatedAt(),
-                transaction.getUpdatedAt()
+                transaction.getCategory().getType()
         );
     }
 
