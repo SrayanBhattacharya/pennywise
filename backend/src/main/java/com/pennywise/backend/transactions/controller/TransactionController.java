@@ -5,6 +5,8 @@ import com.pennywise.backend.transactions.dto.response.TransactionResponse;
 import com.pennywise.backend.transactions.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,5 +22,13 @@ public class TransactionController {
             @Valid @RequestBody CreateTransactionRequest request
     ) {
         return transactionService.createTransaction(request);
+    }
+
+    @GetMapping
+    public Page<TransactionResponse> getTransactions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return transactionService.getTransactions(page, size);
     }
 }

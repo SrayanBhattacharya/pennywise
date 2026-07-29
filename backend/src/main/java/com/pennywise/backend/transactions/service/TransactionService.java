@@ -11,6 +11,11 @@ import com.pennywise.backend.transactions.mapper.TransactionMapper;
 import com.pennywise.backend.transactions.repository.TransactionCategoryRepository;
 import com.pennywise.backend.transactions.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,5 +43,22 @@ public class TransactionService {
         Transaction savedTransaction = transactionRepository.save(transaction);
 
         return transactionMapper.toResponse(savedTransaction);
+    }
+
+    public Page<TransactionResponse> getTransactions(int page, int size) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("transactionDate").descending()
+        );
+
+        Page<Transaction> transactions = transactionRepository.findByUserAndDeletedFalse(user, pageable);
+
+        return transactions.map(transactionMapper::toResponse);
     }
 }
