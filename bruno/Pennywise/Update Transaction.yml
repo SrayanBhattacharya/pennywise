@@ -1,0 +1,30 @@
+info:
+  name: Update Transaction
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/transactions/f1fc8038-a465-41a8-9875-97a2a5217380"
+  headers:
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "amount": 499.99,
+        "title": "RK M75 Keyboard",
+        "merchantName": "Amazon India",
+        "transactionDate": "2026-07-28",
+        "notes": "Updated note",
+        "recurring": false,
+        "categoryId": "ab702d13-c5f0-4b61-93ea-381f5aff5944"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

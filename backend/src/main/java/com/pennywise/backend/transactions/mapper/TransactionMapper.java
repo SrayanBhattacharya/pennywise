@@ -2,6 +2,7 @@ package com.pennywise.backend.transactions.mapper;
 
 import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.transactions.dto.request.CreateTransactionRequest;
+import com.pennywise.backend.transactions.dto.request.UpdateTransactionRequest;
 import com.pennywise.backend.transactions.dto.response.TransactionResponse;
 import com.pennywise.backend.transactions.entity.Transaction;
 import com.pennywise.backend.transactions.entity.TransactionCategory;
@@ -44,17 +45,17 @@ public class TransactionMapper {
         return transaction;
     }
 
-//    public void updateEntity(
-//            Transaction transaction,
-//            UpdateTransactionRequest request,
-//            TransactionCategory category
-//    ) {
-//        transaction.setCategory(category);
-//        transaction.setAmount(request.amount());
-//        transaction.setTitle(request.title());
-//        transaction.setMerchantName(request.merchantName());
-//        transaction.setTransactionDate(request.transactionDate());
-//        transaction.setNotes(request.notes());
-//        transaction.setRecurring(request.recurring());
-//    }
+    public void updateEntity(
+            Transaction transaction,
+            UpdateTransactionRequest request,
+            TransactionCategory category
+    ) {
+        transaction.setCategory(category);
+        transaction.setAmount(request.amount());
+        transaction.setTitle(request.title());
+        transaction.setMerchantName(request.merchantName());
+        transaction.setTransactionDate(request.transactionDate());
+        transaction.setNotes(request.notes());
+        transaction.setRecurring(request.recurring());
+    }
 }

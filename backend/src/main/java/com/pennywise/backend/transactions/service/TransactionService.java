@@ -4,6 +4,7 @@ import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.auth.security.CustomUserDetails;
 import com.pennywise.backend.common.exception.ResourceNotFoundException;
 import com.pennywise.backend.transactions.dto.request.CreateTransactionRequest;
+import com.pennywise.backend.transactions.dto.request.UpdateTransactionRequest;
 import com.pennywise.backend.transactions.dto.response.TransactionResponse;
 import com.pennywise.backend.transactions.entity.Transaction;
 import com.pennywise.backend.transactions.entity.TransactionCategory;
@@ -20,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +63,51 @@ public class TransactionService {
         Page<Transaction> transactions = transactionRepository.findByUserAndDeletedFalse(user, pageable);
 
         return transactions.map(transactionMapper::toResponse);
+    }
+
+    public TransactionResponse getTransaction(UUID transactionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
+
+        Transaction transaction = transactionRepository
+                .findByIdAndUserAndDeletedFalse(transactionId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + transactionId));
+
+        return transactionMapper.toResponse(transaction);
+    }
+
+    public TransactionResponse updateTransaction(UUID transactionId, UpdateTransactionRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
+
+        Transaction transaction = transactionRepository
+                .findByIdAndUserAndDeletedFalse(transactionId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + transactionId));
+
+        TransactionCategory category = transactionCategoryRepository
+                .findById(request.categoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction category not found with id: " + request.categoryId()));
+
+        transactionMapper.updateEntity(transaction, request, category);
+        Transaction updatedTransaction = transactionRepository.save(transaction);
+
+        return transactionMapper.toResponse(updatedTransaction);
+    }
+
+    public void deleteTransaction(UUID transactionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        User user = userDetails.getUser();
+
+        Transaction transaction = transactionRepository
+                .findByIdAndUserAndDeletedFalse(transactionId, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + transactionId));
+
+        transaction.setDeleted(true);
     }
 }
