@@ -1,18 +1,14 @@
 info:
-  name: Get Transactions
+  name: DashboardSummary
   type: http
-  seq: 5
+  seq: 8
 
 http:
   method: GET
-  url: "{{baseUrl}}/transactions?search=cab"
+  url: "{{baseUrl}}/dashboard/summary"
   headers:
     - name: Authorization
       value: Bearer {{accessToken}}
-  params:
-    - name: search
-      value: cab
-      type: query
   auth: inherit
 
 settings:
