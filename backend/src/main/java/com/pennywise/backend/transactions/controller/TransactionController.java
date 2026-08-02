@@ -1,8 +1,10 @@
 package com.pennywise.backend.transactions.controller;
 
 import com.pennywise.backend.transactions.dto.request.CreateTransactionRequest;
+import com.pennywise.backend.transactions.dto.request.TransactionFilterRequest;
 import com.pennywise.backend.transactions.dto.request.UpdateTransactionRequest;
 import com.pennywise.backend.transactions.dto.response.TransactionResponse;
+import com.pennywise.backend.transactions.entity.TransactionType;
 import com.pennywise.backend.transactions.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +35,26 @@ public class TransactionController {
     @GetMapping
     public Page<TransactionResponse> getTransactions(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) UUID categoryId,
+            @RequestParam(required = false) TransactionType transactionType,
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
+            @RequestParam(required = false) BigDecimal minAmount,
+            @RequestParam(required = false) BigDecimal maxAmount,
+            @RequestParam(required = false) String search
     ) {
-        return transactionService.getTransactions(page, size);
+        TransactionFilterRequest filterRequest = new TransactionFilterRequest(
+                categoryId,
+                transactionType,
+                fromDate,
+                toDate,
+                minAmount,
+                maxAmount,
+                search
+        );
+
+        return transactionService.getTransactions(page, size, filterRequest);
     }
 
     @GetMapping("/{transactionId}")

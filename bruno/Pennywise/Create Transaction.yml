@@ -13,12 +13,12 @@ http:
     type: json
     data: |-
       {
-        "categoryId": "ab702d13-c5f0-4b61-93ea-381f5aff5944",
-        "amount": 499.99,
-        "title": "Mechanical Keyboard",
-        "merchantName": "Amazon",
-        "transactionDate": "2026-07-28",
-        "notes": "RK M75",
+        "categoryId": "844bf94a-092c-4f48-9b5e-00474f632447",
+        "amount": 185.00,
+        "title": "Cab Ride",
+        "merchantName": "Uber",
+        "transactionDate": "2026-07-11",
+        "notes": "Office commute",
         "recurring": false
       }
   auth: inherit

@@ -4,6 +4,7 @@ import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.auth.security.CustomUserDetails;
 import com.pennywise.backend.common.exception.ResourceNotFoundException;
 import com.pennywise.backend.transactions.dto.request.CreateTransactionRequest;
+import com.pennywise.backend.transactions.dto.request.TransactionFilterRequest;
 import com.pennywise.backend.transactions.dto.request.UpdateTransactionRequest;
 import com.pennywise.backend.transactions.dto.response.TransactionResponse;
 import com.pennywise.backend.transactions.entity.Transaction;
@@ -11,12 +12,14 @@ import com.pennywise.backend.transactions.entity.TransactionCategory;
 import com.pennywise.backend.transactions.mapper.TransactionMapper;
 import com.pennywise.backend.transactions.repository.TransactionCategoryRepository;
 import com.pennywise.backend.transactions.repository.TransactionRepository;
+import com.pennywise.backend.transactions.specification.TransactionSpecification;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,11 @@ public class TransactionService {
         return transactionMapper.toResponse(savedTransaction);
     }
 
-    public Page<TransactionResponse> getTransactions(int page, int size) {
+    public Page<TransactionResponse> getTransactions(
+            int page,
+            int size,
+            TransactionFilterRequest filterRequest
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -60,7 +67,47 @@ public class TransactionService {
                 Sort.by("transactionDate").descending()
         );
 
-        Page<Transaction> transactions = transactionRepository.findByUserAndDeletedFalse(user, pageable);
+        Specification<Transaction> specification = Specification
+                .where(TransactionSpecification.hasUser(user))
+                .and(TransactionSpecification.notDeleted());
+
+        if (filterRequest.categoryId() != null) {
+            specification = specification.and(
+                    TransactionSpecification.hasCategory(filterRequest.categoryId())
+            );
+        }
+
+        if (filterRequest.transactionType() != null) {
+            specification = specification.and(
+                    TransactionSpecification.hasType(filterRequest.transactionType())
+            );
+        }
+
+        if (filterRequest.fromDate() != null || filterRequest.toDate() != null) {
+            specification = specification.and(
+                    TransactionSpecification.hasDateBetween(
+                            filterRequest.fromDate(),
+                            filterRequest.toDate()
+                    )
+            );
+        }
+
+        if (filterRequest.minAmount() != null || filterRequest.maxAmount() != null) {
+            specification = specification.and(
+                    TransactionSpecification.hasAmountBetween(
+                            filterRequest.minAmount(),
+                            filterRequest.maxAmount()
+                    )
+            );
+        }
+
+        if (filterRequest.search() != null && !filterRequest.search().isBlank()) {
+            specification = specification.and(
+                    TransactionSpecification.containsSearch(filterRequest.search())
+            );
+        }
+
+        Page<Transaction> transactions = transactionRepository.findAll(specification, pageable);
 
         return transactions.map(transactionMapper::toResponse);
     }
