@@ -119,4 +119,19 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(
+            UserNotAuthenticatedException ex,
+            HttpServletRequest request
+    ) {
+        log.error("User not authenticated", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(buildErrorResponse(
+                        HttpStatus.UNAUTHORIZED,
+                        "User not authenticated.",
+                        null,
+                        request
+                ));
+    }
 }

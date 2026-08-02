@@ -1,8 +1,8 @@
 package com.pennywise.backend.transactions.service;
 
 import com.pennywise.backend.auth.entity.User;
-import com.pennywise.backend.auth.security.CustomUserDetails;
 import com.pennywise.backend.common.exception.ResourceNotFoundException;
+import com.pennywise.backend.common.service.CurrentUserService;
 import com.pennywise.backend.transactions.dto.request.CreateTransactionRequest;
 import com.pennywise.backend.transactions.dto.request.TransactionFilterRequest;
 import com.pennywise.backend.transactions.dto.request.UpdateTransactionRequest;
@@ -20,8 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +32,10 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionCategoryRepository transactionCategoryRepository;
     private final TransactionMapper transactionMapper;
+    private final CurrentUserService currentUserService;
 
     public TransactionResponse createTransaction(CreateTransactionRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userDetails.getUser();
+        User user = currentUserService.getCurrentUser();
 
         TransactionCategory category = transactionCategoryRepository
                 .findById(request.categoryId())
@@ -56,10 +52,7 @@ public class TransactionService {
             int size,
             TransactionFilterRequest filterRequest
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userDetails.getUser();
+        User user = currentUserService.getCurrentUser();
 
         Pageable pageable = PageRequest.of(
                 page,
@@ -113,10 +106,7 @@ public class TransactionService {
     }
 
     public TransactionResponse getTransaction(UUID transactionId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userDetails.getUser();
+        User user = currentUserService.getCurrentUser();
 
         Transaction transaction = transactionRepository
                 .findByIdAndUserAndDeletedFalse(transactionId, user)
@@ -126,10 +116,7 @@ public class TransactionService {
     }
 
     public TransactionResponse updateTransaction(UUID transactionId, UpdateTransactionRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userDetails.getUser();
+        User user = currentUserService.getCurrentUser();
 
         Transaction transaction = transactionRepository
                 .findByIdAndUserAndDeletedFalse(transactionId, user)
@@ -146,10 +133,7 @@ public class TransactionService {
     }
 
     public void deleteTransaction(UUID transactionId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        User user = userDetails.getUser();
+        User user = currentUserService.getCurrentUser();
 
         Transaction transaction = transactionRepository
                 .findByIdAndUserAndDeletedFalse(transactionId, user)
