@@ -134,4 +134,19 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<ErrorResponse> handleFileStorageException(
+            FileStorageException ex,
+            HttpServletRequest request
+    ) {
+        log.error("File storage error", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(buildErrorResponse(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "An error occurred while storing the file.",
+                        null,
+                        request
+                ));
+    }
 }

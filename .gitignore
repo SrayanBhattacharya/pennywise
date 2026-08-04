@@ -135,3 +135,21 @@ k6/reports/
 
 *.swp
 *.swo
+
+# -----------------------------------------------------------------------------
+# Sample Bank Statements (Development Only)
+# -----------------------------------------------------------------------------
+
+samples/bank-statements/**/*.pdf
+samples/bank-statements/**/*.PDF
+
+samples/bank-statements/**/*.xlsx
+samples/bank-statements/**/*.xls
+samples/bank-statements/**/*.csv
+
+samples/bank-statements/**/*.json
+samples/bank-statements/**/*.txt
+
+# Keep documentation and folder structure
+!samples/bank-statements/**/README.md
+!samples/bank-statements/**/.gitkeep

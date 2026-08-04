@@ -4,3 +4,7 @@ spring:
 
   profiles:
     active: dev
+
+app:
+  statement:
+    upload-directory: uploads/temp
