@@ -2,8 +2,11 @@ package com.pennywise.backend.dashboard.service;
 
 import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.common.service.CurrentUserService;
+import com.pennywise.backend.dashboard.dto.response.CategoryBreakdownResponse;
 import com.pennywise.backend.dashboard.dto.response.DashboardSummaryResponse;
+import com.pennywise.backend.dashboard.dto.response.MonthlySummaryResponse;
 import com.pennywise.backend.transactions.dto.response.TransactionResponse;
+import com.pennywise.backend.transactions.entity.TransactionType;
 import com.pennywise.backend.transactions.mapper.TransactionMapper;
 import com.pennywise.backend.transactions.repository.TransactionRepository;
 
@@ -45,4 +48,18 @@ public class DashboardService {
                 recentTransactions
         );
     }
-}
+
+    public List<CategoryBreakdownResponse> getCategoryBreakdown() {
+        User user = currentUserService.getCurrentUser();
+
+        return transactionRepository.getCategoryBreakdown(
+                user,
+                TransactionType.EXPENSE
+        );
+    }
+
+    public List<MonthlySummaryResponse> getMonthlySummary() {
+        User user = currentUserService.getCurrentUser();
+
+        return transactionRepository.getMonthlySummary(user);
+    }}
