@@ -179,4 +179,19 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(StatementExtractionException.class)
+    public ResponseEntity<ErrorResponse> handleStatementExtractionException(
+            StatementExtractionException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Statement extraction error", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "An error occurred while extracting the statement.",
+                        null,
+                        request
+                ));
+    }
 }

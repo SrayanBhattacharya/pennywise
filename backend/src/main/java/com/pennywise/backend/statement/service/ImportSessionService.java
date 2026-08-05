@@ -3,6 +3,7 @@ package com.pennywise.backend.statement.service;
 import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.common.exception.FileStorageException;
 import com.pennywise.backend.common.exception.PasswordRequiredException;
+import com.pennywise.backend.common.exception.StatementExtractionException;
 import com.pennywise.backend.common.service.CurrentUserService;
 import com.pennywise.backend.statement.detector.StatementFileTypeDetector;
 import com.pennywise.backend.statement.dto.response.UploadStatementResponse;
@@ -26,7 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -58,9 +59,6 @@ public class ImportSessionService {
             StatementFileType fileType = fileTypeDetector.detect(originalFilename);
             StatementExtractor extractor = statementExtractorFactory.getExtractor(fileType);
 
-            log.info("Detected file type: {}", fileType);
-            log.info("Encrypted: {}", encrypted);
-
             ImportSession session = new ImportSession();
 
             session.setUser(user);
@@ -71,8 +69,11 @@ public class ImportSessionService {
             try {
                 extractor.extract(destination, null);
                 session.setStatus(ImportStatus.PROCESSING);
-            } catch (PasswordRequiredException exception) {
+            } catch (PasswordRequiredException e) {
                 session.setStatus(ImportStatus.PASSWORD_REQUIRED);
+            } catch (StatementExtractionException e) {
+                session.setStatus(ImportStatus.FAILED);
+                session.setFailureReason(e.getMessage());
             }
 
             ImportSession saved = importSessionRepository.save(session);
