@@ -1,0 +1,15 @@
+info:
+  name: Unlock Statement
+  type: http
+  seq: 12
+
+http:
+  method: POST
+  url: "{{baseUrl}}/statements/82666307-76a7-4e9f-9fa0-385f061b53c0/unlock"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

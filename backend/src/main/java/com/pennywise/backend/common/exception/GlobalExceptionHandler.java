@@ -194,4 +194,34 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(ImportSessionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleImportSessionNotFoundException(
+            ImportSessionNotFoundException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Import session not found", ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(buildErrorResponse(
+                        HttpStatus.NOT_FOUND,
+                        "Import session not found.",
+                        null,
+                        request
+                ));
+    }
+
+    @ExceptionHandler(InvalidImportStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidImportStateException(
+            InvalidImportStateException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Invalid import state", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Invalid import state.",
+                        null,
+                        request
+                ));
+    }
 }

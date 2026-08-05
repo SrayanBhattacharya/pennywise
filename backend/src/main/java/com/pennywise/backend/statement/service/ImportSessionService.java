@@ -1,11 +1,10 @@
 package com.pennywise.backend.statement.service;
 
 import com.pennywise.backend.auth.entity.User;
-import com.pennywise.backend.common.exception.FileStorageException;
-import com.pennywise.backend.common.exception.PasswordRequiredException;
-import com.pennywise.backend.common.exception.StatementExtractionException;
+import com.pennywise.backend.common.exception.*;
 import com.pennywise.backend.common.service.CurrentUserService;
 import com.pennywise.backend.statement.detector.StatementFileTypeDetector;
+import com.pennywise.backend.statement.domain.StatementData;
 import com.pennywise.backend.statement.dto.response.UploadStatementResponse;
 import com.pennywise.backend.statement.entity.ImportSession;
 import com.pennywise.backend.statement.entity.ImportStatus;
@@ -39,6 +38,16 @@ public class ImportSessionService {
 
     @Value("${app.statement.upload-directory}")
     private String uploadDirectory;
+
+    private String getExtension(String filename) {
+        int index = filename.lastIndexOf('.');
+
+        if (index == -1) {
+            return "";
+        }
+
+        return filename.substring(index + 1);
+    }
 
     public UploadStatementResponse createImportSession(MultipartFile file) {
         User user = currentUserService.getCurrentUser();
@@ -88,13 +97,32 @@ public class ImportSessionService {
         }
     }
 
-    private String getExtension(String filename) {
-        int index = filename.lastIndexOf('.');
+    public UploadStatementResponse unlockStatement(UUID importId, String password) {
+        ImportSession session = importSessionRepository
+                .findById(importId)
+                .orElseThrow(() -> new ImportSessionNotFoundException("Import session with ID " + importId + " not found."));
 
-        if (index == -1) {
-            return "";
+        if (session.getStatus() != ImportStatus.PASSWORD_REQUIRED) {
+            throw new InvalidImportStateException("Import session with ID " + importId + " is not in a state that requires a password.");
         }
 
-        return filename.substring(index + 1);
+        Path file = Path.of(session.getStoragePath());
+
+        StatementFileType fileType =
+                fileTypeDetector.detect(session.getOriginalFileName());
+
+        StatementExtractor extractor =
+                statementExtractorFactory.getExtractor(fileType);
+
+        StatementData statementData =
+                extractor.extract(file, password);
+
+        session.setStatus(ImportStatus.PROCESSING);
+        importSessionRepository.save(session);
+
+        return new UploadStatementResponse(
+                session.getId(),
+                session.getStatus()
+        );
     }
 }

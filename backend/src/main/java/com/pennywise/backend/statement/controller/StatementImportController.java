@@ -22,14 +22,14 @@ public class StatementImportController {
         return importSessionService.createImportSession(file);
     }
 
-//    @PostMapping("/{importId}/unlock")
-//    public UploadStatementResponse unlockStatement(
-//            @PathVariable UUID importId,
-//            @Valid @RequestBody UnlockStatementRequest request
-//    ) {
-//        return importSessionService.unlockStatement(
-//                importId,
-//                request.password()
-//        );
-//    }
+    @PostMapping("/{importId}/unlock")
+    public UploadStatementResponse unlockStatement(
+            @PathVariable UUID importId,
+            @Valid @RequestBody UnlockStatementRequest request
+    ) {
+        return importSessionService.unlockStatement(
+                importId,
+                request.password()
+        );
+    }
 }
