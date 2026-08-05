@@ -149,4 +149,34 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(UnsupportedStatementFileException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedStatementFileException(
+            UnsupportedStatementFileException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Unsupported statement file", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Unsupported statement file type.",
+                        null,
+                        request
+                ));
+    }
+
+    @ExceptionHandler(PasswordRequiredException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordRequiredException(
+            PasswordRequiredException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Password required", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Password required.",
+                        null,
+                        request
+                ));
+    }
 }

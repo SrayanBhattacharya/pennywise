@@ -2,13 +2,19 @@ package com.pennywise.backend.statement.service;
 
 import com.pennywise.backend.auth.entity.User;
 import com.pennywise.backend.common.exception.FileStorageException;
+import com.pennywise.backend.common.exception.PasswordRequiredException;
 import com.pennywise.backend.common.service.CurrentUserService;
+import com.pennywise.backend.statement.detector.StatementFileTypeDetector;
 import com.pennywise.backend.statement.dto.response.UploadStatementResponse;
 import com.pennywise.backend.statement.entity.ImportSession;
 import com.pennywise.backend.statement.entity.ImportStatus;
+import com.pennywise.backend.statement.extractor.StatementExtractor;
+import com.pennywise.backend.statement.extractor.StatementExtractorFactory;
+import com.pennywise.backend.statement.model.StatementFileType;
 import com.pennywise.backend.statement.repository.ImportSessionRepository;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +26,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ImportSessionService {
     private final ImportSessionRepository importSessionRepository;
     private final CurrentUserService currentUserService;
+    private final StatementFileTypeDetector fileTypeDetector;
+    private final StatementExtractorFactory statementExtractorFactory;
 
     @Value("${app.statement.upload-directory}")
     private String uploadDirectory;
@@ -46,13 +55,25 @@ public class ImportSessionService {
 
             file.transferTo(destination);
 
+            StatementFileType fileType = fileTypeDetector.detect(originalFilename);
+            StatementExtractor extractor = statementExtractorFactory.getExtractor(fileType);
+
+            log.info("Detected file type: {}", fileType);
+            log.info("Encrypted: {}", encrypted);
+
             ImportSession session = new ImportSession();
 
             session.setUser(user);
             session.setOriginalFileName(originalFilename);
             session.setStoragePath(destination.toString());
             session.setFileType(extension.toLowerCase());
-            session.setStatus(ImportStatus.UPLOADED);
+
+            try {
+                extractor.extract(destination, null);
+                session.setStatus(ImportStatus.PROCESSING);
+            } catch (PasswordRequiredException exception) {
+                session.setStatus(ImportStatus.PASSWORD_REQUIRED);
+            }
 
             ImportSession saved = importSessionRepository.save(session);
 
@@ -67,7 +88,6 @@ public class ImportSessionService {
     }
 
     private String getExtension(String filename) {
-
         int index = filename.lastIndexOf('.');
 
         if (index == -1) {
