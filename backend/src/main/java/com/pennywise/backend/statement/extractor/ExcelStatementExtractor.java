@@ -4,6 +4,7 @@ import com.pennywise.backend.common.exception.PasswordRequiredException;
 import com.pennywise.backend.common.exception.StatementExtractionException;
 import com.pennywise.backend.statement.domain.StatementData;
 import com.pennywise.backend.statement.model.StatementFileType;
+import com.pennywise.backend.statement.model.StatementRow;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class ExcelStatementExtractor implements StatementExtractor {
         ) {
             Sheet sheet = workbook.getSheetAt(0);
 
-            List<List<String>> rows = new ArrayList<>();
+            List<StatementRow> rows = new ArrayList<>();
 
             DataFormatter formatter = new DataFormatter();
 
@@ -41,7 +42,7 @@ public class ExcelStatementExtractor implements StatementExtractor {
                     cells.add(formatter.formatCellValue(cell));
                 }
 
-                rows.add(cells);
+                rows.add(new StatementRow(cells));
             }
 
             return new StatementData(

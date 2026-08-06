@@ -11,6 +11,7 @@ import com.pennywise.backend.statement.entity.ImportStatus;
 import com.pennywise.backend.statement.extractor.StatementExtractor;
 import com.pennywise.backend.statement.extractor.StatementExtractorFactory;
 import com.pennywise.backend.statement.model.StatementFileType;
+import com.pennywise.backend.statement.model.StatementRow;
 import com.pennywise.backend.statement.repository.ImportSessionRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -108,14 +109,11 @@ public class ImportSessionService {
 
         Path file = Path.of(session.getStoragePath());
 
-        StatementFileType fileType =
-                fileTypeDetector.detect(session.getOriginalFileName());
+        StatementFileType fileType = fileTypeDetector.detect(session.getOriginalFileName());
 
-        StatementExtractor extractor =
-                statementExtractorFactory.getExtractor(fileType);
+        StatementExtractor extractor = statementExtractorFactory.getExtractor(fileType);
 
-        StatementData statementData =
-                extractor.extract(file, password);
+        StatementData statementData = extractor.extract(file, password);
 
         session.setStatus(ImportStatus.PROCESSING);
         importSessionRepository.save(session);

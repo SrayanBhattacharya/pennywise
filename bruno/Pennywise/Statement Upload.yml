@@ -15,7 +15,7 @@ http:
       - name: file
         type: file
         value:
-          - /home/srayan/Projects/pennywise/samples/bank-statements/sbi/Email_Statement_23072026080437129512.xlsx
+          - /home/srayan/Projects/pennywise/samples/bank-statements/sbi/statement.xlsx
   auth: inherit
 
 settings:
