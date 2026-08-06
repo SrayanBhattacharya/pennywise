@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/statements/82666307-76a7-4e9f-9fa0-385f061b53c0/unlock"
+  url: "{{baseUrl}}/statements/9ecce9e9-7a1f-4b31-adb0-e3643d9142bb/unlock"
   headers:
     - name: Authorization
       value: Bearer {{accessToken}}

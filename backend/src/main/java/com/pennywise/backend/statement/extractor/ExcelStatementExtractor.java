@@ -32,6 +32,7 @@ public class ExcelStatementExtractor implements StatementExtractor {
             Sheet sheet = workbook.getSheetAt(0);
 
             List<StatementRow> rows = new ArrayList<>();
+            int rowNumber = 0;
 
             DataFormatter formatter = new DataFormatter();
 
@@ -42,7 +43,7 @@ public class ExcelStatementExtractor implements StatementExtractor {
                     cells.add(formatter.formatCellValue(cell));
                 }
 
-                rows.add(new StatementRow(cells));
+                rows.add(new StatementRow(rowNumber++, cells));
             }
 
             return new StatementData(

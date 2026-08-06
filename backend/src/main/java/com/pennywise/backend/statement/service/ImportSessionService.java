@@ -10,12 +10,12 @@ import com.pennywise.backend.statement.entity.ImportSession;
 import com.pennywise.backend.statement.entity.ImportStatus;
 import com.pennywise.backend.statement.extractor.StatementExtractor;
 import com.pennywise.backend.statement.extractor.StatementExtractorFactory;
+import com.pennywise.backend.statement.model.ParsedTransaction;
 import com.pennywise.backend.statement.model.StatementFileType;
-import com.pennywise.backend.statement.model.StatementRow;
+import com.pennywise.backend.statement.parser.SbiStatementParser;
 import com.pennywise.backend.statement.repository.ImportSessionRepository;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -36,6 +37,7 @@ public class ImportSessionService {
     private final CurrentUserService currentUserService;
     private final StatementFileTypeDetector fileTypeDetector;
     private final StatementExtractorFactory statementExtractorFactory;
+    private final SbiStatementParser parser;
 
     @Value("${app.statement.upload-directory}")
     private String uploadDirectory;
@@ -117,6 +119,8 @@ public class ImportSessionService {
 
         session.setStatus(ImportStatus.PROCESSING);
         importSessionRepository.save(session);
+
+        List<ParsedTransaction> transactions = parser.parse(statementData);
 
         return new UploadStatementResponse(
                 session.getId(),

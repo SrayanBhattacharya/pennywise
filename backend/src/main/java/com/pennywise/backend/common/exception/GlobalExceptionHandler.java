@@ -224,4 +224,34 @@ public class GlobalExceptionHandler {
                         request
                 ));
     }
+
+    @ExceptionHandler(UnsupportedBankException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedBankException(
+            UnsupportedBankException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Unsupported bank", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "Unsupported bank.",
+                        null,
+                        request
+                ));
+    }
+
+    @ExceptionHandler(StatementParseException.class)
+    public ResponseEntity<ErrorResponse> handleStatementParseException(
+            StatementParseException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Statement parse error", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildErrorResponse(
+                        HttpStatus.BAD_REQUEST,
+                        "An error occurred while parsing the statement.",
+                        null,
+                        request
+                ));
+    }
 }
