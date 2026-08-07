@@ -10,9 +10,10 @@ import com.pennywise.backend.statement.entity.ImportSession;
 import com.pennywise.backend.statement.entity.ImportStatus;
 import com.pennywise.backend.statement.extractor.StatementExtractor;
 import com.pennywise.backend.statement.extractor.StatementExtractorFactory;
+import com.pennywise.backend.statement.model.BankType;
 import com.pennywise.backend.statement.model.ParsedTransaction;
 import com.pennywise.backend.statement.model.StatementFileType;
-import com.pennywise.backend.statement.parser.SbiStatementParser;
+import com.pennywise.backend.statement.parser.StatementParserFactory;
 import com.pennywise.backend.statement.repository.ImportSessionRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +38,8 @@ public class ImportSessionService {
     private final CurrentUserService currentUserService;
     private final StatementFileTypeDetector fileTypeDetector;
     private final StatementExtractorFactory statementExtractorFactory;
-    private final SbiStatementParser parser;
+    private final StatementImportService statementImportService;
+    private final StatementParserFactory statementParserFactory;
 
     @Value("${app.statement.upload-directory}")
     private String uploadDirectory;
@@ -120,7 +122,14 @@ public class ImportSessionService {
         session.setStatus(ImportStatus.PROCESSING);
         importSessionRepository.save(session);
 
-        List<ParsedTransaction> transactions = parser.parse(statementData);
+        List<ParsedTransaction> parsedTransactions = statementParserFactory
+                .getParser(BankType.SBI)
+                .parse(statementData);
+
+        statementImportService.importTransaction(parsedTransactions, session.getUser());
+
+        session.setStatus(ImportStatus.COMPLETED);
+        importSessionRepository.save(session);
 
         return new UploadStatementResponse(
                 session.getId(),

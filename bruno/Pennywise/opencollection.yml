@@ -19,7 +19,7 @@ request:
     - name: baseUrl
       value: http://localhost:8080/api
     - name: accessToken
-      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI0MzRhMjI5My03NDA2LTQxMGUtOGQ5Ny05YjRhY2ZjYmRhODciLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc4NjAzOTMzOSwiZXhwIjoxNzg2MDQwMjM5fQ.ZN2SdaU2yplJXu2ND9Rk1mWnStZEjU92-7WCsyiYJo8
+      value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI0MzRhMjI5My03NDA2LTQxMGUtOGQ5Ny05YjRhY2ZjYmRhODciLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc4NjExNjMxOCwiZXhwIjoxNzg2MTE3MjE4fQ.FNWWXX87rrznRyuO6o3ve4dsx7dW6DKESG5kyi-cXOY
     - name: refreshToken
       value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUBsb2NhbC5jb20iLCJ1c2VySWQiOiI0MzRhMjI5My03NDA2LTQxMGUtOGQ5Ny05YjRhY2ZjYmRhODciLCJyb2xlIjoiVVNFUiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzg1ODIwOTg0LCJleHAiOjE3ODg0MTI5ODR9.g0Jo99CAp4RPwdrTT17TEyhzx7f1nrZoprA56r_ylVI
 bundled: false

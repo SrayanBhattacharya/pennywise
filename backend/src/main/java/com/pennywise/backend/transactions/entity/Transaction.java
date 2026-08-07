@@ -33,10 +33,9 @@ public class Transaction extends BaseEntity {
     )
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "category_id",
-            nullable = false,
             foreignKey = @ForeignKey(name = "fk_transaction_category")
     )
     private TransactionCategory category;
@@ -61,4 +60,8 @@ public class Transaction extends BaseEntity {
 
     @Column(nullable = false)
     private boolean deleted = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private TransactionSource source;
 }
